@@ -3,6 +3,8 @@
 
 ## Introduction
 This repository contains the PyTorch implementation of **TransGAT-DTI** framework. **TransGAT-DTI** is a deep bilinear attention network framework with adversarial domain adaptation to explicitly learn pair-wise local interactions between drugs and targets, and adapt on out-of-distribution data. It works on two-dimensional (2D) drug molecular graphs and target protein sequences to perform prediction. We introduce a transformer and graph attention based drug-target interaction prediction framework named TransGAT-DTI to predict the interaction of drug-target interaction pairs.
+
+![TransGAT](https://github.com/HPC-NEAU/TransGAT-DTI/blob/master/image/TransGAT.png "TransGAT")
 ## Required Packages
 The source code developed in Python 3.7 using PyTorch 1.7.1. The required python dependencies are given below. There is no additional non-standard hardware requirements.
 -   Python 3.7
