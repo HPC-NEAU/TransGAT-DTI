@@ -6,7 +6,7 @@ from dgllife.model.gnn import GCN
 from dgllife.model.gnn import GAT
 from ban import BANLayer
 from torch.nn.utils.weight_norm import weight_norm
-
+from dgl.nn.pytorch import GATConv
 
 def binary_cross_entropy(pred_output, labels):
     loss_fct = torch.nn.BCELoss()
@@ -90,13 +90,13 @@ class MolecularGAT(nn.Module):
         if padding:
             with torch.no_grad():
                 self.init_transform.weight[-1].fill_(0)
-        self.gnn = GAT(in_feats=dim_embedding, hidden_feats=hidden_feats, activation=activation)
+        self.gnn = GATConv(in_feats=dim_embedding, out_feats=hidden_feats[-1], num_heads=8)
         self.output_feats = hidden_feats[-1]
 
     def forward(self, batch_graph):
         node_feats = batch_graph.ndata.pop('h')
         node_feats = self.init_transform(node_feats)
-        node_feats = self.gnn(batch_graph, node_feats)
+        node_feats = self.gnn(batch_graph, node_feats).flatten(1)
         batch_size = batch_graph.batch_size
         node_feats = node_feats.view(batch_size, -1, self.output_feats)
         return node_feats
