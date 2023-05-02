@@ -41,7 +41,7 @@ $ python main.py --cfg "configs/TransGAT.yaml" --data ${dataset} --split ${split
 ```
 for example：
 ```
-$ python main.py --cfg "configs/TransGAT.yaml" --data bindingdb --split cluster
+$ python main.py --cfg "configs/TransGAT.yaml" --data bindingdb --split random
 ```
 ## Acknowledgements
 This implementation is completed by the high-performance computing team of Northeast Agricultural University.
