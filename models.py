@@ -7,7 +7,7 @@ from dgllife.model.gnn import GAT
 from ban import BANLayer
 from torch.nn.utils.weight_norm import weight_norm
 from dgl.nn.pytorch import GATConv
-
+import dgl.nn as dglnn
 def binary_cross_entropy(pred_output, labels):
     loss_fct = torch.nn.BCELoss()
     m = nn.Sigmoid()
@@ -82,25 +82,31 @@ class Trans_GAT(nn.Module):
         elif mode == "eval":
             return v_d, v_p, score, att
 
-
 class MolecularGAT(nn.Module):
-    def __init__(self, in_feats, dim_embedding=128, padding=True, hidden_feats=None, activation=None):
+    def __init__(self, in_feats, dim_embedding=128, padding=True, hidden_feats=None, num_heads=4):
         super(MolecularGAT, self).__init__()
         self.init_transform = nn.Linear(in_feats, dim_embedding, bias=False)
         if padding:
             with torch.no_grad():
                 self.init_transform.weight[-1].fill_(0)
-        self.gnn = GATConv(in_feats=dim_embedding, out_feats=hidden_feats[-1], num_heads=8)
+        self.gnn = dglnn.GATConv(
+            in_feats=dim_embedding,
+            out_feats=hidden_feats[-1],
+            num_heads=num_heads,
+            feat_drop=0.0,
+            attn_drop=0.0,
+            residual=True
+        )
         self.output_feats = hidden_feats[-1]
 
     def forward(self, batch_graph):
         node_feats = batch_graph.ndata.pop('h')
         node_feats = self.init_transform(node_feats)
-        node_feats = self.gnn(batch_graph, node_feats).flatten(1)
+        node_feats = F.elu(self.gnn(batch_graph, node_feats).flatten(1))
         batch_size = batch_graph.batch_size
         node_feats = node_feats.view(batch_size, -1, self.output_feats)
         return node_feats
-
+    
 class MLPDecoder(nn.Module):
     def __init__(self, in_dim, hidden_dim, out_dim, binary=1):
         super(MLPDecoder, self).__init__()
