@@ -49,4 +49,4 @@ This implementation is completed by the high-performance computing team of North
 If you find our code is helpful for you, feel free to cite
 ### Contact us
 
-[hpc@neau.edu.cn](mailto:zhouchangjian@neau.edu.cn)
+[zhouchangjian@neau.edu.cn](mailto:zhouchangjian@neau.edu.cn)
